@@ -7,6 +7,7 @@ import { useState } from "react";
 import { Item } from "./item";
 import { cn } from "@/lib/utils";
 import { Doc, Id } from "@/convex/_generated/dataModel";
+import { FileIcon } from "lucide-react";
 
 interface DocumentListProps {
     parentDocumentId?: Id<"documents">;
@@ -65,7 +66,27 @@ export const DocumentList = ({
             >
                 No pages inside
             </p>
-            
+            {documents.map((document) => (
+                <div key={document._id}>
+                    <Item
+                        id={document._id}
+                        onClick={() => onRedirect(document._id)}
+                        label={document.title}
+                        icon={FileIcon}
+                        documentIcon={document.icon}
+                        active={params.documentId === document._id}
+                        level={level}
+                        onExpand={() => onExpand(document._id)}
+                        expanded={expanded[document._id]}
+                    />
+                    {expanded[document._id] && (
+                        <DocumentList
+                            parentDocumentId={document._id}
+                            level={level+1}
+                        />
+                    )}
+                </div>
+            ))}
         </>
     )
 }
